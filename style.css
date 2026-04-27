@@ -1,54 +1,95 @@
+/**
+ * 2026 TJHS Timetable Stylesheet
+ * --------------------------------------------------
+ */
+
+/* 1. 基础样式 / Base Styles */
 * {
-    user-select: none;
+    box-sizing: border-box;
+    user-select: none; /* 防止文本被选中 / Prevent text selection */
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
+body {
+    margin: 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+h1, h2 {
+    text-align: center;
+    margin: 5px 0;
+}
+
+/* 2. 布局与控件 / Layout & Controls */
+.controls {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* 3. 表格样式 / Table Styles */
 table {
     margin: auto;
-}
-
-h1 {
-    text-align: center;
-}
-
-div {
-    padding: 0 20px;
-}
-
-table {
     border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-td.print {
-    border: 1px solid hsl(0, 0%, 0%);
-}
-
-td.print-break {
-    width: 1mm;
-}
-
-.vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    white-space: nowrap;
-}
-
-td,
-th {
+td, th {
     text-align: center;
     height: 50px;
     width: 75px;
+    padding: 4px;
 }
 
+/* 打印边框样式 / Print Border Styles */
+td.print {
+    border: 1px solid #000;
+}
+
+/* 间隔列样式 / Break Column Styles */
+td.print-break {
+    width: 2mm;
+    background-color: #eee;
+}
+
+/* 4. 特殊文本效果 / Special Text Effects */
+.vertical-text {
+    writing-mode: vertical-rl; /* 垂直排列 / Vertical arrangement */
+    text-orientation: upright; /* 字符保持直立 / Characters stay upright */
+    white-space: nowrap;
+    font-size: 0.9em;
+    padding: 5px 0;
+}
+
+/* 5. 打印优化 / Print Optimization */
 @media print {
+    body {
+        background-color: white;
+        padding: 0;
+    }
+
     .no-print {
         display: none !important;
     }
+
     table {
         page-break-inside: auto;
+        box-shadow: none;
     }
+
     tr {
         page-break-inside: avoid;
         page-break-after: auto;
+    }
+
+    /* 确保打印时边框清晰 / Ensure borders are crisp when printing */
+    td.print {
+        border: 1px solid #000 !important;
+        -webkit-print-color-adjust: exact;
     }
 }
