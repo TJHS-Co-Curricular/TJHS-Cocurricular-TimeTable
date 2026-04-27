@@ -169,9 +169,9 @@ window.createTeacherRow = (teacher, isFirst, rowCount) => {
     // 垂直合并的早晨活动列 (07:14-08:00)
     // Vertically merged morning activity columns
     if (isFirst) {
-        html += `<td class="print vertical-text" rowspan="${rowCount}">早自习</td>`;
-        html += `<td class="print vertical-text" rowspan="${rowCount}">班导师时间</td>`;
-        html += `<td class="print vertical-text" rowspan="${rowCount}">晨读</td>`;
+        html += `<td class="print vertical-text" rowspan="${rowCount}"> 早 自 习 </td>`;
+        html += `<td class="print vertical-text" rowspan="${rowCount}"> 班 导 师 时 间 </td>`;
+        html += `<td class="print vertical-text" rowspan="${rowCount}"> 晨 读 </td>`;
     }
     
     // 间隔列 / Break Column
