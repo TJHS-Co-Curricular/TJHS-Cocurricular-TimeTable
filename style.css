@@ -1,0 +1,48 @@
+* {
+    user-select: none;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+table {
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+}
+
+div {
+    padding: 0 20px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td.print {
+    border: 1px solid black;
+}
+
+td.print-break {
+    width: 1mm;
+}
+
+td,
+th {
+    text-align: center;
+    height: 50px;
+    width: 75px;
+}
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    table {
+        page-break-inside: auto;
+    }
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
