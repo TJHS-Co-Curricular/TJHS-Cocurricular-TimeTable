@@ -20,7 +20,7 @@ table {
 }
 
 td.print {
-    border: 1px solid rgb(0, 0, 0);
+    border: 1px solid #02d9ff;
 }
 
 td.print-break {
