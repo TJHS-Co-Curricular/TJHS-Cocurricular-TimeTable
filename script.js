@@ -147,7 +147,7 @@ window.renderMainTable = (mode) => {
 
         if (mode === "All") {
             const hr = document.createElement('tr');
-            hr.innerHTML = `<td colspan="30" style="background-color: #333; color: white; text-align: left; padding: 8px 15px; font-weight: bold;">${day.toUpperCase()}</td>`;
+            hr.innerHTML = `<td colspan="30" style="background-color: #ff0000; color: white; text-align: left; padding: 8px 15px; font-weight: bold;">${day.toUpperCase()}</td>`;
             tbody.appendChild(hr);
         }
         data.forEach(t => tbody.appendChild(createTeacherRow(t)));
