@@ -44,7 +44,7 @@ async function loadCSVData() {
         if (tbody) {
             tbody.innerHTML = `<tr><td colspan='30' style='color: red; padding: 50px;'>
                 CRITICAL ERROR: Failed to load timetable.csv.<br>
-                Please ensure the file exists in your GitHub repository.
+                Please ensure the file exists in your repository.
             </td></tr>`;
         }
     }
@@ -57,7 +57,6 @@ function parseCSV(text) {
     for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
         
-        // Handle commas inside quotes if necessary, but simple split for now
         const cols = lines[i].split(',').map(c => c.trim());
         const day = cols[0];
         
@@ -97,14 +96,22 @@ window.renderTableHeaders = () => {
     if (!thead) return;
 
     let runningTime = APP_CONFIG.startTime;
-    let periodRow = `<tr><td class="print">Teacher</td><td class="print"></td><td class="print" colspan="2">0</td><td class="print-break"></td>`;
-    let timeRow = `<tr><td class="print">Time</td><td class="print">07:15<br>07:30</td><td class="print">07:30<br>07:45</td><td class="print">${formatMinutesToTime(465)}<br>${formatMinutesToTime(runningTime)}</td><td class="print-break"></td>`;
+    // Row 1: "Teacher" and "Period 0" headers
+    let periodRow = `<tr>
+        <td class="print" rowspan="2">Teacher</td>
+        <td class="print" colspan="3">0</td>
+        <td class="print-break" rowspan="2"></td>`;
+    
+    // Row 2: Time slots for Period 0
+    let timeRow = `<tr>
+        <td class="print">07:14<br>07:30</td>
+        <td class="print">07:30<br>07:45</td>
+        <td class="print">07:45<br>08:00</td>`;
 
     APP_CONFIG.schoolSchedule.forEach(slot => {
         const endTime = runningTime + slot.duration;
         if (slot.type === 'break') {
-            periodRow += `<td class="print-break"></td>`;
-            timeRow += `<td class="print-break"></td>`;
+            periodRow += `<td class="print-break" rowspan="2"></td>`;
         } else {
             periodRow += `<td class="print">${slot.label}</td>`;
             timeRow += `<td class="print">${formatMinutesToTime(runningTime)}<br>${formatMinutesToTime(endTime)}</td>`;
@@ -115,10 +122,18 @@ window.renderTableHeaders = () => {
     thead.innerHTML = periodRow + `</tr>` + timeRow + `</tr>`;
 };
 
-window.createTeacherRow = (teacher) => {
+window.createTeacherRow = (teacher, isFirst, rowCount) => {
     const tr = document.createElement('tr');
     let html = `<td class="print" style="font-weight: bold;">${teacher.name || ""}</td>`;
-    html += `<td class="print"></td><td class="print" colspan="2">${teacher.p0 || ""}</td><td class="print-break"></td>`;
+    
+    // 07:14-08:00 Slots: Vertically merged for all teachers
+    if (isFirst) {
+        html += `<td class="print vertical-text" rowspan="${rowCount}">早自习</td>`;
+        html += `<td class="print vertical-text" rowspan="${rowCount}">班导师时间</td>`;
+        html += `<td class="print vertical-text" rowspan="${rowCount}">晨读</td>`;
+    }
+    
+    html += `<td class="print-break"></td>`;
 
     let pCount = 1;
     APP_CONFIG.schoolSchedule.forEach(slot => {
@@ -150,7 +165,10 @@ window.renderMainTable = (mode) => {
             hr.innerHTML = `<td colspan="30" style="background-color: #ff0000; color: white; text-align: left; padding: 8px 15px; font-weight: bold;">${day.toUpperCase()}</td>`;
             tbody.appendChild(hr);
         }
-        data.forEach(t => tbody.appendChild(createTeacherRow(t)));
+        
+        data.forEach((t, index) => {
+            tbody.appendChild(createTeacherRow(t, index === 0, data.length));
+        });
     });
 };
 
@@ -159,13 +177,6 @@ window.changeDay = () => {
     if (daySelect) {
         renderMainTable(daySelect.value);
     }
-};
-
-window.exportFullCSV = () => {
-    const link = document.createElement("a");
-    link.href = 'timetable.csv';
-    link.download = "timetable.csv";
-    link.click();
 };
 
 // --- 5. INITIALIZATION ---

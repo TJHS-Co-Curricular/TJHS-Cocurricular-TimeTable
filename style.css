@@ -27,6 +27,12 @@ td.print-break {
     width: 1mm;
 }
 
+.vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    white-space: nowrap;
+}
+
 td,
 th {
     text-align: center;
