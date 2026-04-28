@@ -42,8 +42,9 @@ table {
 td, th {
     text-align: center;
     height: 50px;
-    width: 75px;
+    width: 85px; /* Increased from 75px for better label fit */
     padding: 4px;
+    font-size: 0.9em;
 }
 
 /* 打印边框样式 / Print Border Styles */
@@ -55,6 +56,13 @@ td.print {
 td.print-break {
     width: 2mm;
     background-color: #eee;
+}
+
+/* 特殊单元格样式 / Special Cell Styles */
+td.recess, td.dinner {
+    background-color: #f8f9fa;
+    color: #666;
+    font-size: 0.8em;
 }
 
 /* 4. 特殊文本效果 / Special Text Effects */

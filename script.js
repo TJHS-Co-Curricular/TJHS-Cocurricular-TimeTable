@@ -9,21 +9,22 @@
 const APP_CONFIG = {
     startTime: 480, // 08:00 AM (in minutes from midnight)
     schoolSchedule: [
-        { type: 'period', label: '1', duration: 35 },
-        { type: 'period', label: '2', duration: 35 },
-        { type: 'break',  label: 'Break',  duration: 5 },
-        { type: 'period', label: '3', duration: 35 },
-        { type: 'period', label: '4', duration: 35 },
-        { type: 'break',  label: 'Break',  duration: 5 },
-        { type: 'period', label: '5', duration: 35 },
-        { type: 'period', label: '6', duration: 35 },
-        { type: 'period', label: '7', duration: 35 },
-        { type: 'break',  label: 'Break',  duration: 5 },
-        { type: 'period', label: '8', duration: 35 },
-        { type: 'period', label: '9', duration: 35 },
+        { type: 'period', label: '1', p: 1, duration: 35 },
+        { type: 'period', label: '2', p: 2, duration: 35 },
+        { type: 'recess', label: 'Recess', duration: 30 }, // 09:10 - 09:40
+        { type: 'period', label: '3', p: 3, duration: 35 },
+        { type: 'period', label: '4', p: 4, duration: 35 },
+        { type: 'period', label: '5', p: 5, duration: 35 },
+        { type: 'break',  label: 'Break', duration: 5 },  // 11:25 - 11:30
+        { type: 'staggered', label: 'J.Dinner / S.P6', p: 6, duration: 35 }, // 11:30 - 12:05
+        { type: 'break',  label: 'Break', duration: 5 },  // 12:05 - 12:10
+        { type: 'staggered', label: 'S.Dinner / J.P6', p: 6, duration: 35 }, // 12:10 - 12:45
+        { type: 'period', label: '7', p: 7, duration: 35 },
+        { type: 'period', label: '8', p: 8, duration: 35 },
+        { type: 'period', label: '9', p: 9, duration: 35 },
         { type: 'break',  label: 'Break',  duration: 10 },
-        { type: 'period', label: '10', duration: 35 },
-        { type: 'period', label: '11', duration: 35 }
+        { type: 'period', label: '10', p: 10, duration: 35 },
+        { type: 'period', label: '11', p: 11, duration: 35 }
     ]
 };
 
@@ -179,13 +180,47 @@ window.createTeacherRow = (teacher, isFirst, rowCount) => {
 
     // 渲染各个 Period 的课程内容
     // Render individual period content
-    let pCount = 1;
     APP_CONFIG.schoolSchedule.forEach(slot => {
         if (slot.type === 'break') {
             html += `<td class="print-break"></td>`;
+        } else if (slot.type === 'recess') {
+            html += `<td class="print recess">Recess</td>`;
+        } else if (slot.type === 'staggered') {
+            const content = teacher[`p${slot.p}`] || "";
+            const isJunior = content.trim().startsWith('J');
+            const isSenior = content.trim().startsWith('S');
+            
+            // 启发式判断：如果内容不是明确的 J/S（如“备课”），则检查该老师其它时段
+            // Heuristic: If content isn't clearly J/S (e.g., "Prep"), check other periods
+            let likelyJunior = isJunior;
+            let likelySenior = isSenior;
+            if (!isJunior && !isSenior && content.trim() !== "") {
+                for (let i = 1; i <= 11; i++) {
+                    const pVal = (teacher[`p${i}`] || "").trim();
+                    if (pVal.startsWith('J')) { likelyJunior = true; break; }
+                    if (pVal.startsWith('S')) { likelySenior = true; break; }
+                }
+            }
+
+            if (slot.label.includes('J.Dinner')) {
+                // 第一个槽位：初中用餐 / 高中 P6
+                // Slot 1: Junior Dinner / Senior P6
+                if (likelySenior) {
+                    html += `<td class="print">${content}</td>`;
+                } else {
+                    html += `<td class="print dinner">Junior<br>Dinner</td>`;
+                }
+            } else {
+                // 第二个槽位：高中用餐 / 初中 P6
+                // Slot 2: Senior Dinner / Junior P6
+                if (likelyJunior || (!likelySenior && content.trim() !== "")) {
+                    html += `<td class="print">${content}</td>`;
+                } else {
+                    html += `<td class="print dinner">Senior<br>Dinner</td>`;
+                }
+            }
         } else {
-            html += `<td class="print">${teacher[`p${pCount}`] || ""}</td>`;
-            pCount++;
+            html += `<td class="print">${teacher[`p${slot.p}`] || ""}</td>`;
         }
     });
 
