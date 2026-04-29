@@ -34,15 +34,27 @@ let teacherTimetableData = {};
 // --- 2. 数据处理逻辑 / DATA LOGIC ---
 
 /**
- * 从服务器加载 timetable.csv 文件
- * Fetches timetable.csv from the server
+ * 从服务器加载 CSV 文件
+ * Fetches daily CSV files from the server
  */
 async function loadCSVData() {
+  teacherTimetableData = {}; // Initialize here once
+  const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  
   try {
-    const response = await fetch("timetable.csv");
-    if (!response.ok) throw new Error("Could not load timetable.csv");
-    const csvText = await response.text();
-    parseCSV(csvText);
+    // Fetch all files concurrently
+    const responses = await Promise.all(
+      days.map(day => fetch(`Schedule/${day}.csv`))
+    );
+
+    for (const [index, response] of responses.entries()) {
+      if (!response.ok) {
+        console.warn(`Could not load ${days[index]}.csv (may not exist yet)`);
+        continue;
+      }
+      const csvText = await response.text();
+      parseCSV(csvText);
+    }
 
     setupDefaultDay();
     changeDay();
@@ -51,8 +63,8 @@ async function loadCSVData() {
     const tbody = document.getElementById("teacherRows");
     if (tbody) {
       tbody.innerHTML = `<tr><td colspan='30' style='color: red; padding: 50px;'>
-                CRITICAL ERROR: Failed to load timetable.csv.<br>
-                Please ensure the file exists in your repository.
+                CRITICAL ERROR: Failed to load CSV files.<br>
+                Please ensure the files exist in your repository.
             </td></tr>`;
     }
   }
@@ -65,7 +77,6 @@ async function loadCSVData() {
  */
 function parseCSV(text) {
   const lines = text.split("\n");
-  teacherTimetableData = {};
 
   for (let i = 1; i < lines.length; i++) {
     if (!lines[i].trim()) continue;
@@ -258,6 +269,8 @@ window.renderMainTable = (mode) => {
       ? ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
       : [mode];
 
+  const fragment = document.createDocumentFragment();
+
   daysToRender.forEach((day) => {
     const data = teacherTimetableData[day];
     if (!data) return;
@@ -266,15 +279,17 @@ window.renderMainTable = (mode) => {
     // Add a date header row in "All" mode
     if (mode === "All") {
       const hr = document.createElement("tr");
-      hr.innerHTML = `<td colspan="30" style="background-color: #ff0000; color: white; text-align: left; padding: 8px 15px; font-weight: bold; border: 1px solid #000;">${day.toUpperCase()}</td>`;
-      tbody.appendChild(hr);
+      hr.innerHTML = `<td colspan="30" style="background-color: var(--primary-color); color: white; text-align: left; padding: 10px 15px; font-weight: bold; border: 1px solid var(--border-color); font-size: 1.1em;">${day.toUpperCase()}</td>`;
+      fragment.appendChild(hr);
     }
 
     // 为该天的每位教师生成行 / Generate rows for each teacher in that day
     data.forEach((t, index) => {
-      tbody.appendChild(createTeacherRow(t, index === 0, data.length));
+      fragment.appendChild(createTeacherRow(t, index === 0, data.length));
     });
   });
+
+  tbody.appendChild(fragment);
 };
 
 /**

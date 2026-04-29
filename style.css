@@ -4,22 +4,37 @@
  */
 
 /* 1. 基础样式 / Base Styles */
+:root {
+  --primary-color: #0d6efd;
+  --primary-hover: #0b5ed7;
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --bg-color: #f8f9fa;
+  --surface-color: #ffffff;
+  --border-color: #dee2e6;
+  --table-header-bg: #e9ecef;
+  --font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
 * {
   box-sizing: border-box;
   user-select: none; /* 防止文本被选中 / Prevent text selection */
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: var(--font-family);
 }
 
 body {
   margin: 0;
   padding: 20px;
-  background-color: #f8f9fa;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
 }
 
 h1,
 h2 {
   text-align: center;
-  margin: 5px 0;
+  margin: 10px 0;
+  color: var(--text-color);
 }
 
 /* 2. 布局与控件 / Layout & Controls */
@@ -27,45 +42,86 @@ h2 {
   text-align: center;
   margin-bottom: 30px;
   padding: 15px;
-  background: white;
+  background: var(--surface-color);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Table Wrapper for Responsive Scrolling */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background-color: var(--surface-color);
 }
 
 /* 3. 表格样式 / Table Styles */
 table {
   margin: auto;
   border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface-color);
 }
 
 td,
 th {
   text-align: center;
   height: 50px;
-  width: 85px; /* Increased from 75px for better label fit */
+  width: 85px;
   padding: 4px;
   font-size: 0.9em;
+  border: 1px solid var(--border-color);
+}
+
+thead td, thead th {
+  background-color: var(--table-header-bg);
+  font-weight: 600;
+}
+
+tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
 }
 
 /* 打印边框样式 / Print Border Styles */
 td.print {
-  border: 1px solid #000;
+  border: 1px solid var(--border-color);
 }
 
 /* 间隔列样式 / Break Column Styles */
 td.print-break {
-  width: 2mm;
-  background-color: #eee;
+  width: 4px;
+  background-color: var(--border-color);
+  padding: 0;
+  border: none;
 }
 
 /* 特殊单元格样式 / Special Cell Styles */
 td.recess,
 td.dinner {
-  background-color: #f8f9fa;
-  color: #666;
-  font-size: 0.8em;
+  background-color: var(--bg-color);
+  color: var(--text-muted);
+  font-size: 0.85em;
+  font-style: italic;
 }
 
 /* 4. 特殊文本效果 / Special Text Effects */
@@ -74,7 +130,10 @@ td.dinner {
   text-orientation: upright; /* 字符保持直立 / Characters stay upright */
   white-space: nowrap;
   font-size: 0.9em;
-  padding: 5px 0;
+  padding: 10px 0;
+  background-color: #fff3cd; /* Light yellow background for morning periods */
+  color: #856404;
+  font-weight: bold;
 }
 
 footer {
@@ -111,9 +170,16 @@ footer p {
     display: none !important;
   }
 
+  .table-responsive {
+    overflow: visible;
+    box-shadow: none;
+    margin-bottom: 0;
+  }
+
   table {
     page-break-inside: auto;
     box-shadow: none;
+    min-width: auto;
   }
 
   tr {
@@ -122,8 +188,13 @@ footer p {
   }
 
   /* 确保打印时边框清晰 / Ensure borders are crisp when printing */
-  td.print {
+  td, th, td.print {
     border: 1px solid #000 !important;
     -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+
+  td.print-break {
+    background-color: #ddd !important;
   }
 }
