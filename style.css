@@ -18,7 +18,8 @@
 
 * {
   box-sizing: border-box;
-  user-select: none; /* 防止文本被选中 / Prevent text selection */
+  user-select: none;
+  /* 防止文本被选中 / Prevent text selection */
   font-family: var(--font-family);
 }
 
@@ -93,7 +94,8 @@ th {
   border: 1px solid var(--border-color);
 }
 
-thead td, thead th {
+thead td,
+thead th {
   background-color: var(--table-header-bg);
   font-weight: 600;
 }
@@ -126,12 +128,15 @@ td.dinner {
 
 /* 4. 特殊文本效果 / Special Text Effects */
 .vertical-text {
-  writing-mode: vertical-rl; /* 垂直排列 / Vertical arrangement */
-  text-orientation: upright; /* 字符保持直立 / Characters stay upright */
+  writing-mode: vertical-rl;
+  /* 垂直排列 / Vertical arrangement */
+  text-orientation: upright;
+  /* 字符保持直立 / Characters stay upright */
   white-space: nowrap;
   font-size: 0.9em;
   padding: 10px 0;
-  background-color: #fff3cd; /* Light yellow background for morning periods */
+  background-color: #fff3cd;
+  /* Light yellow background for morning periods */
   color: #856404;
   font-weight: bold;
 }
@@ -188,7 +193,9 @@ footer p {
   }
 
   /* 确保打印时边框清晰 / Ensure borders are crisp when printing */
-  td, th, td.print {
+  td,
+  th,
+  td.print {
     border: 1px solid #000 !important;
     -webkit-print-color-adjust: exact;
     color-adjust: exact;

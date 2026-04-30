@@ -9,22 +9,98 @@
 const APP_CONFIG = {
   startTime: 480, // 08:00 AM (in minutes from midnight)
   schoolSchedule: [
-    { type: "period", label: "1", p: 1, duration: 35 },
-    { type: "period", label: "2", p: 2, duration: 35 },
-    { type: "recess", label: "J&S Recess", duration: 30 }, // 09:10 - 09:40
-    { type: "period", label: "3", p: 3, duration: 35 },
-    { type: "period", label: "4", p: 4, duration: 35 },
-    { type: "period", label: "5", p: 5, duration: 35 },
-    { type: "break", label: "Break", duration: 5 }, // 11:25 - 11:30
-    { type: "staggered", label: "J.Dinner / S.P6", p: 6, duration: 35 }, // 11:30 - 12:05
-    { type: "break", label: "Break", duration: 5 }, // 12:05 - 12:10
-    { type: "staggered", label: "S.Dinner / J.P6", p: 6, duration: 35 }, // 12:10 - 12:45
-    { type: "period", label: "7", p: 7, duration: 35 },
-    { type: "period", label: "8", p: 8, duration: 35 },
-    { type: "period", label: "9", p: 9, duration: 35 },
-    { type: "break", label: "Break", duration: 10 },
-    { type: "period", label: "10", p: 10, duration: 35 },
-    { type: "period", label: "11", p: 11, duration: 35 },
+    {
+      type: "period",
+      label: "1",
+      p: 1,
+      duration: 35,
+    },
+    {
+      type: "period",
+      label: "2",
+      p: 2,
+      duration: 35,
+    },
+    {
+      type: "recess",
+      label: "J&S Recess",
+      duration: 30,
+    }, // 09:10 - 09:40
+    {
+      type: "period",
+      label: "3",
+      p: 3,
+      duration: 35,
+    },
+    {
+      type: "period",
+      label: "4",
+      p: 4,
+      duration: 35,
+    },
+    {
+      type: "period",
+      label: "5",
+      p: 5,
+      duration: 35,
+    },
+    {
+      type: "break",
+      label: "Break",
+      duration: 5,
+    }, // 11:25 - 11:30
+    {
+      type: "staggered",
+      label: "J.Dinner / S.P6",
+      p: 6,
+      duration: 35,
+    }, // 11:30 - 12:05
+    {
+      type: "break",
+      label: "Break",
+      duration: 5,
+    }, // 12:05 - 12:10
+    {
+      type: "staggered",
+      label: "S.Dinner / J.P6",
+      p: 6,
+      duration: 35,
+    }, // 12:10 - 12:45
+    {
+      type: "period",
+      label: "7",
+      p: 7,
+      duration: 35,
+    },
+    {
+      type: "period",
+      label: "8",
+      p: 8,
+      duration: 35,
+    },
+    {
+      type: "period",
+      label: "9",
+      p: 9,
+      duration: 35,
+    },
+    {
+      type: "break",
+      label: "Break",
+      duration: 10,
+    },
+    {
+      type: "period",
+      label: "10",
+      p: 10,
+      duration: 35,
+    },
+    {
+      type: "period",
+      label: "11",
+      p: 11,
+      duration: 35,
+    },
   ],
 };
 
@@ -40,11 +116,11 @@ let teacherTimetableData = {};
 async function loadCSVData() {
   teacherTimetableData = {}; // Initialize here once
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-  
+
   try {
     // Fetch all files concurrently
     const responses = await Promise.all(
-      days.map(day => fetch(`Schedule/${day}.csv`))
+      days.map((day) => fetch(`Schedule/${day}.csv`)),
     );
 
     for (const [index, response] of responses.entries()) {
